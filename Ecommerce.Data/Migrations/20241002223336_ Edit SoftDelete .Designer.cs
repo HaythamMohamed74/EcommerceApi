@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ecommerce.Data.Migrations
 {
     [DbContext(typeof(StoreDBContext))]
-    [Migration("20240929231016_Add Product tables")]
-    partial class AddProducttables
+    [Migration("20241002223336_ Edit SoftDelete ")]
+    partial class EditSoftDelete
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,7 +39,7 @@ namespace Ecommerce.Data.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValueSql("GETDAET()");
+                        .HasDefaultValueSql("GETDATE()");
 
                     b.Property<int>("CreatedBy")
                         .HasColumnType("int");
@@ -74,6 +74,9 @@ namespace Ecommerce.Data.Migrations
                     b.HasIndex("BrandId");
 
                     b.HasIndex("TypeId");
+
+                    b.HasIndex("isDeleted")
+                        .HasFilter("IsDeleted =0");
 
                     b.ToTable("Products");
                 });
