@@ -1,12 +1,15 @@
 
 using Ecommerce.Data.Data.contexts;
+using Ecommerce.Repository;
+using EcommerceApi.Helper;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceApi
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +23,8 @@ namespace EcommerceApi
             builder.Services.AddSwaggerGen();
 
             var app = builder.Build();
+            await SeedingData.SeedData(app);
+           
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
