@@ -3,6 +3,7 @@ using Ecommerce.Data.Data.contexts;
 using Ecommerce.Repository;
 using Ecommerce.Repository.Interfaces;
 using Ecommerce.Repository.Repositories;
+using Ecommerce.Service.Services.ProductService;
 using Ecommerce.Service.Services.ProductService.Dtos;
 using EcommerceApi.Helper;
 using Microsoft.AspNetCore.Components.Forms;
@@ -20,7 +21,9 @@ namespace EcommerceApi
 
             builder.Services.AddControllers();
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            builder.Services.AddScoped<IProductService, ProductServices>();
             builder.Services.AddAutoMapper(typeof(ProductProfile));
+
             builder.Services.AddDbContext<StoreDBContext>
                 (optionsAction :(op)=>op.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -39,7 +42,7 @@ namespace EcommerceApi
             }
 
             app.UseHttpsRedirection();
-
+            app.UseAuthentication();
             app.UseAuthorization();
 
 
