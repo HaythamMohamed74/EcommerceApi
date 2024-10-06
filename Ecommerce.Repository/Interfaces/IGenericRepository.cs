@@ -13,7 +13,7 @@ namespace Ecommerce.Repository.Interfaces
         Task <TEntity> GetByIdAsync(TKey id);
 
 
-        Task <IEnumerable<TEntity>> GetAll();
+        Task <IEnumerable<TEntity>> GetAllAsync();
         IQueryable<TEntity> GetAllQueryable();
 
         Task  AddEntityAsync(TEntity entity);

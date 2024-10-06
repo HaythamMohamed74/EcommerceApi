@@ -23,14 +23,14 @@ namespace Ecommerce.Repository.Repositories
             _storeDBContext.Set<TEntity>().Remove(entity);
         }
 
-        public async Task<IEnumerable<TEntity>> GetAll()
+        public async Task<IEnumerable<TEntity>> GetAllAsync()
         {
            return await _storeDBContext.Set<TEntity>().AsNoTracking().ToListAsync();
         }
 
-        public IQueryable<TEntity> GetAllQueryable()
+        public  IQueryable<TEntity> GetAllQueryable()
         {
-            return _storeDBContext.Set<TEntity>().AsNoTracking();
+            return  _storeDBContext.Set<TEntity>().AsNoTracking();
         }
 
         public async Task<TEntity> GetByIdAsync(TKey id)
