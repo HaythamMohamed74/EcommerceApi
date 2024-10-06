@@ -1,4 +1,5 @@
-﻿using Ecommerce.Repository.Interfaces;
+﻿using AutoMapper;
+using Ecommerce.Repository.Interfaces;
 using Ecommerce.Service.Services.ProductService.Dtos;
 using System;
 using System.Collections.Generic;
@@ -12,24 +13,20 @@ namespace Ecommerce.Service.Services.ProductService
     public class ProductServices : IProductService
     {
         private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public ProductServices(IUnitOfWork unitOfWork)
+        public ProductServices(IUnitOfWork unitOfWork, IMapper mapper)
         {
             _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
         public async Task<IEnumerable<BrandTypeDetailsDto>> GetAllBrandsAsync()
         {
             var brands = await _unitOfWork.Repository<ProductBrand, int>().GetAllAsync();
 
-            IEnumerable<BrandTypeDetailsDto> brandsDto = brands.Select(p => new BrandTypeDetailsDto
-            {
-
-                Id = p.Id,
-                Name = p.Name,
-                CreatedAt = p.CreatedAt
-
-            });
-            return brandsDto;
+            IEnumerable<BrandTypeDetailsDto> brandsMapped =_mapper.Map<IEnumerable<BrandTypeDetailsDto>>(brands);
+        
+            return brandsMapped;
         }
 
         public async Task<IEnumerable<ProductDetailsDto>> GetAllProductsAsync()
@@ -37,34 +34,33 @@ namespace Ecommerce.Service.Services.ProductService
 
             var products = await _unitOfWork.Repository<Product, int>().GetAllAsync();
 
-            IEnumerable<ProductDetailsDto> productDetailsDto = products.Select(p=> new ProductDetailsDto{
-            
-                Id = p.Id, 
-                Name = p.Name,
-                CreatedAt=p.CreatedAt,
-                PictureUrl=p.PictureUrl,
-                Price=p.Price,
-                Description=p.Description,
-                Brand=p.Brand.Name,
-                Type=p.Type.Name
+            IEnumerable<ProductDetailsDto> productDetailsMapped =_mapper.Map<IEnumerable<ProductDetailsDto>>(products);
 
-            });
-            return productDetailsDto;
+            #region Manual Mapp
+            //IEnumerable<ProductDetailsDto> productDetailsDto = products.Select(p=> new ProductDetailsDto{
+
+            //    Id = p.Id, 
+            //    Name = p.Name,
+            //    CreatedAt=p.CreatedAt,
+            //    PictureUrl=p.PictureUrl,
+            //    Price=p.Price,
+            //    Description=p.Description,
+            //    Brand=p.Brand.Name,
+            //    Type=p.Type.Name
+
+            //}); 
+            #endregion
+
+            return productDetailsMapped;
         }
 
         public async Task<IEnumerable<BrandTypeDetailsDto>> GetAllTypesAsync()
         {
             var types = await _unitOfWork.Repository<ProductType, int>().GetAllAsync();
 
-            IEnumerable<BrandTypeDetailsDto> typesDtos = types.Select(p => new BrandTypeDetailsDto
-            {
-
-                Id = p.Id,
-                Name = p.Name,
-                CreatedAt = p.CreatedAt
-
-            });
-            return typesDtos;
+            IEnumerable<BrandTypeDetailsDto> typesMapped = _mapper.Map<IEnumerable<BrandTypeDetailsDto>>(types);
+                
+            return typesMapped;
         }
 
         public async Task<ProductDetailsDto> GetProductByIdAsync(int id)
@@ -76,19 +72,9 @@ namespace Ecommerce.Service.Services.ProductService
                 throw new Exception("product not found ");
             }
 
-
-            var productDetailsDto = new ProductDetailsDto
-            {
-
-                Id = product.Id,
-                Name = product.Name,
-                CreatedAt = product.CreatedAt,
-                PictureUrl=product.PictureUrl,
-                Brand=product.Brand.Name,
-                Type=product.Type.Name
-
-            };
-            return productDetailsDto;
+            var productDetailsMapped = _mapper.Map<ProductDetailsDto>(product);
+                
+           return productDetailsMapped;
 
                 
         }
