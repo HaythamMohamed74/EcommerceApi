@@ -13,7 +13,8 @@ namespace Ecommerce.Service.Services.ProductService.Dtos
         {
             CreateMap<Product, ProductDetailsDto>()
                 .ForMember(dest => dest.Brand, src => src.MapFrom(src => src.Brand.Name))
-                .ForMember(dest => dest.Type, src => src.MapFrom(src => src.Type.Name));
+                .ForMember(dest => dest.Type, src => src.MapFrom(src => src.Type.Name))
+                .ForMember(dest => dest.PictureUrl, src => src.MapFrom<ProductPictureUrlResolver>());
 
             CreateMap<ProductBrand, BrandTypeDetailsDto>();
             CreateMap<ProductType, BrandTypeDetailsDto>();
