@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Ecommerce.Repository.Interfaces;
+using Ecommerce.Repository.Specifications;
+using Ecommerce.Repository.Specifications.ProductSpec;
 using Ecommerce.Service.Services.ProductService.Dtos;
 using System;
 using System.Collections.Generic;
@@ -54,6 +56,16 @@ namespace Ecommerce.Service.Services.ProductService
             return productDetailsMapped;
         }
 
+        public async Task<IEnumerable<ProductDetailsDto>> GetAllProductsWithSpecAsync(ProductSpecifications specification)
+        {
+           
+            var products = await _unitOfWork.Repository<Product, int>().GetAllWithSpecAsync(specification);
+            IEnumerable<ProductDetailsDto> productDetailsMapped = _mapper.Map<IEnumerable<ProductDetailsDto>>(products);
+            return productDetailsMapped;
+        }
+
+      
+
         public async Task<IEnumerable<BrandTypeDetailsDto>> GetAllTypesAsync()
         {
             var types = await _unitOfWork.Repository<ProductType, int>().GetAllAsync();
@@ -77,6 +89,14 @@ namespace Ecommerce.Service.Services.ProductService
            return productDetailsMapped;
 
                 
+        }
+
+        public async Task<ProductDetailsDto> GetProductWithSpecAsync(ProductSpecifications specification)
+        {
+            var product = await _unitOfWork.Repository<Product, int>().GetEntityWithSpec(specification);
+            var  productDetailsMapped = _mapper.Map<ProductDetailsDto>(product);
+            return productDetailsMapped;
+
         }
     }
 }

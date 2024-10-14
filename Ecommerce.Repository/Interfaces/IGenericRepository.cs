@@ -1,4 +1,5 @@
 ﻿using Ecommerce.Data.Entities;
+using Ecommerce.Repository.Specifications;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,9 +12,12 @@ namespace Ecommerce.Repository.Interfaces
     {
         
         Task <TEntity> GetByIdAsync(TKey id);
+        Task<TEntity> GetEntityWithSpec(ISpecification<TEntity> specification);
 
 
         Task <IEnumerable<TEntity>> GetAllAsync();
+
+        Task<IEnumerable<TEntity>> GetAllWithSpecAsync(ISpecification<TEntity> specification);
         IQueryable<TEntity> GetAllQueryable();
 
         Task  AddEntityAsync(TEntity entity);

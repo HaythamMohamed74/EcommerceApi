@@ -1,4 +1,6 @@
-﻿using Ecommerce.Service.Services.ProductService.Dtos;
+﻿using Ecommerce.Repository.Specifications;
+using Ecommerce.Repository.Specifications.ProductSpec;
+using Ecommerce.Service.Services.ProductService.Dtos;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,8 +14,10 @@ namespace Ecommerce.Service.Services.ProductService
 
 
         Task<IEnumerable<ProductDetailsDto>> GetAllProductsAsync(); // pageSize ,page index
+        Task<IEnumerable<ProductDetailsDto>> GetAllProductsWithSpecAsync(ProductSpecifications specification);
 
         Task<ProductDetailsDto> GetProductByIdAsync(int id);
+        Task<ProductDetailsDto> GetProductWithSpecAsync(ProductSpecifications productSpecifications );
 
         Task<IEnumerable<BrandTypeDetailsDto>> GetAllBrandsAsync(); //bool useCaching =true
         Task<IEnumerable<BrandTypeDetailsDto>> GetAllTypesAsync(); //bool useCaching =true

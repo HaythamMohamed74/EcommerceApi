@@ -1,6 +1,7 @@
 ﻿using Ecommerce.Data.Data.contexts;
 using Ecommerce.Data.Entities;
 using Ecommerce.Repository.Interfaces;
+using Ecommerce.Repository.Specifications;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ecommerce.Repository.Repositories
@@ -15,7 +16,8 @@ namespace Ecommerce.Repository.Repositories
         }
         public async Task AddEntityAsync(TEntity entity)
         {
-              await  _storeDBContext.Set<TEntity>().AddAsync(entity);
+              await  _storeDBContext.Set<TEntity>()
+                .AddAsync(entity);
         }
 
         public void DeleteEntityAsync(TEntity entity)
@@ -33,14 +35,31 @@ namespace Ecommerce.Repository.Repositories
             return  _storeDBContext.Set<TEntity>().AsNoTracking();
         }
 
+        public async Task<IEnumerable<TEntity>> GetAllWithSpecAsync(ISpecification<TEntity> specification)
+        {
+            return await ApplySpecs(specification).ToListAsync();
+        }
+
         public async Task<TEntity> GetByIdAsync(TKey id)
         {
          return  await _storeDBContext.Set<TEntity>().FindAsync(id);
         }
 
+
+        public async Task<TEntity> GetEntityWithSpec(ISpecification<TEntity> specification)
+        {
+           return await ApplySpecs(specification).FirstOrDefaultAsync();
+        }
+
+
         public void UpdateEntityAsync(TEntity entity)
         {
             _storeDBContext.Set<TEntity>().Update(entity);
+        }
+
+        private IQueryable<TEntity> ApplySpecs(ISpecification<TEntity> spec)
+        {
+            return SpecificationEvaluator<TEntity, TKey>.BuildQuery(_storeDBContext.Set<TEntity>(), spec);
         }
     }
 }

@@ -45,7 +45,7 @@ namespace Ecommerce.Repository
             catch (Exception ex)
             {
               var log=  loggerFactory.CreateLogger<StoreDbContextSeed>();
-                log.LogError(ex.Message);
+                log.LogError($" Log in SeedData {ex.Message}");
               
                 
             }
