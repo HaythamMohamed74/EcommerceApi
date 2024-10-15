@@ -13,11 +13,13 @@ namespace Ecommerce.Service.Services.ProductService
     {
 
 
-        Task<IEnumerable<ProductDetailsDto>> GetAllProductsAsync(); // pageSize ,page index
-        Task<IEnumerable<ProductDetailsDto>> GetAllProductsWithSpecAsync(ProductSpecifications specification);
+        Task<IEnumerable<ProductDetailsDto>> GetAllProductsAsync(string? sort ,int? brandId , int? typeId); // pageSize ,page index
+        //Task<IEnumerable<ProductDetailsDto>> GetAllProductsFilterAsync(int? brandId, int? typeId); // pageSize ,page index
+        //Task<ProductDetailsDto> GetAllProductsAsyncOrderingByPrice(); // pageSize ,page index
+        //Task<IEnumerable<ProductDetailsDto>> GetAllProductsWithSpecAsync(ProductSpecifications specification);
 
         Task<ProductDetailsDto> GetProductByIdAsync(int id);
-        Task<ProductDetailsDto> GetProductWithSpecAsync(ProductSpecifications productSpecifications );
+        //Task<ProductDetailsDto> GetProductWithSpecAsync(ProductSpecifications productSpecifications );
 
         Task<IEnumerable<BrandTypeDetailsDto>> GetAllBrandsAsync(); //bool useCaching =true
         Task<IEnumerable<BrandTypeDetailsDto>> GetAllTypesAsync(); //bool useCaching =true

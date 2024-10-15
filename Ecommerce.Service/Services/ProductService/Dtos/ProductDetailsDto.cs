@@ -19,7 +19,8 @@ namespace Ecommerce.Service.Services.ProductService.Dtos
 
         public string Brand { get; set;}
         public string Type { get; set;}
-
+         public int ProductBrandId { get; set; }
+         public int ProductTypeId { get; set; }
         public DateTime CreatedAt { get; set; }
 
 

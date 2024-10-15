@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -9,26 +10,48 @@ namespace Ecommerce.Repository.Specifications.ProductSpec
 {
     public class ProductSpecifications : BaseSpcefication<Product>
     {
-        public ProductSpecifications()
+        
+        // ctor used for get specific Product by id 
+        public ProductSpecifications(int? id) : base(p => p.Id == id)
         {
             AddIncludes(p => p.Brand);
             AddIncludes(p => p.Type);
         }
 
-        //public ProductSpecifications(ProductSpecificationItems productSpecificationItems) :
-        //    base(
-        //        p => (p.BrandId == productSpecificationItems.BrandId || !productSpecificationItems.BrandId.HasValue)
-        //    &&  p.TypeId==productSpecificationItems.TypeId  || !productSpecificationItems.TypeId.HasValue)
-        //{
-        //    AddIncludes(p => p.Brand);
-        //    AddIncludes(p => p.Type);
-        //}
-
-        public ProductSpecifications(int? id) : base(p=>p.Id==id)
+        //ctor to sort with Filter
+        public ProductSpecifications(string? sort,int?  brandId, int? typeId) : base(p =>
+            (!brandId.HasValue || p.BrandId == brandId) &&
+            (!typeId.HasValue || p.TypeId == typeId))
         {
             AddIncludes(p => p.Brand);
             AddIncludes(p => p.Type);
+            if (!string.IsNullOrEmpty(sort))
+            {
+                switch (sort)
+                {
+                    case "priceAsc":
+                        AddOrderBy(p => p.Price);
+                        break;
+                    case "priceDesc":
+                        AddOrderByDesc(p => p.Price);
+                        break;
+                    case "Name":
+                        AddOrderBy(p => p.Name);
+                        break;
+                    default:
+                        AddOrderBy(p => p.Name);
+                        break;
+                }
+            }
+
+
+
+
+
+
         }
+
+
+
     }
-
 }

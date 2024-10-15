@@ -24,10 +24,17 @@ namespace Ecommerce.Repository.Repositories
         {
             _storeDBContext.Set<TEntity>().Remove(entity);
         }
-
-        public async Task<IEnumerable<TEntity>> GetAllAsync()
+        public async Task<TEntity> GetByIdAsync(ISpecification<TEntity>? specification)
         {
-           return await _storeDBContext.Set<TEntity>().AsNoTracking().ToListAsync();
+            return await ApplySpecs(specification).FirstOrDefaultAsync();
+        }
+
+
+        public async Task<IEnumerable<TEntity>> GetAllAsync(ISpecification<TEntity>? specification)
+        {
+            //var spec =  SpecificationEvaluator<TEntity,TKey>.BuildQuery(_storeDBContext.Set<TEntity>(), specification);
+           //return await _storeDBContext.Set<TEntity>().AsNoTracking().ToListAsync();
+            return await ApplySpecs(specification).AsNoTracking().ToListAsync();
         }
 
         public  IQueryable<TEntity> GetAllQueryable()
@@ -35,21 +42,20 @@ namespace Ecommerce.Repository.Repositories
             return  _storeDBContext.Set<TEntity>().AsNoTracking();
         }
 
-        public async Task<IEnumerable<TEntity>> GetAllWithSpecAsync(ISpecification<TEntity> specification)
-        {
-            return await ApplySpecs(specification).ToListAsync();
-        }
+      
 
-        public async Task<TEntity> GetByIdAsync(TKey id)
-        {
-         return  await _storeDBContext.Set<TEntity>().FindAsync(id);
-        }
+      
+
+        //public async Task<IEnumerable<TEntity>> GetAllWithSpecAsync(ISpecification<TEntity> specification)
+        //{
+        //    return await ApplySpecs(specification).ToListAsync();
+        //}
 
 
-        public async Task<TEntity> GetEntityWithSpec(ISpecification<TEntity> specification)
-        {
-           return await ApplySpecs(specification).FirstOrDefaultAsync();
-        }
+        //public async Task<TEntity> GetEntityWithSpec(ISpecification<TEntity> specification)
+        //{
+        //   return await ApplySpecs(specification).FirstOrDefaultAsync();
+        //}
 
 
         public void UpdateEntityAsync(TEntity entity)

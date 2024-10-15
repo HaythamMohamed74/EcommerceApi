@@ -20,10 +20,21 @@ namespace Ecommerce.Repository.Specifications
             {
               query= query.Where(spec.Criteria);    //.where(exp)
             }
+
+            if (spec.OrderBy is not null)
+            {
+
+                query = query.OrderBy(spec.OrderBy);
+            }
+            if (spec.OrderByDesc is not null)
+            {
+                query = query.OrderByDescending(spec.OrderByDesc);
+            }
             if (spec.Includes is not null)
             {
                 query = spec.Includes.Aggregate(query, (currentQuery, includeExp) => currentQuery.Include(includeExp));
             }
+          
             return query;
         }
 

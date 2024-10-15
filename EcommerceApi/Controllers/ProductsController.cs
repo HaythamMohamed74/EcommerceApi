@@ -19,20 +19,29 @@ namespace EcommerceApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductDetailsDto>>> GetAllProduct()
+       
+        public async Task<ActionResult<ProductDetailsDto>> GetProductById(int id)
         {
-            //var spec = new BaseSpcefication<Product, int>();
-            return Ok(await _productService.GetAllProductsAsync());
-
-
+           
+            return Ok(await _productService.GetProductByIdAsync(id));
         }
+
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductDetailsDto>>> GetAllProductSpec()
+        public async Task<ActionResult<IEnumerable<ProductDetailsDto>>> GetAllProduct([FromQuery] string? sort, int? brandId,  int? typeId)
         {
-            var spec = new ProductSpecifications();
-            return Ok(await _productService.GetAllProductsWithSpecAsync(spec));
+            
+            return Ok(await _productService.GetAllProductsAsync(sort,brandId,typeId));
 
-        }
+        }  
+        //[HttpGet]
+        //public async Task<ActionResult<IEnumerable<ProductDetailsDto>>> GetAllProductWithFilter([FromQuery] int? brandId, [FromQuery] int? typeId)
+        //{
+
+        //    return Ok(await _productService.GetAllProductsFilterAsync(brandId, typeId));
+
+
+        //}
+
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BrandTypeDetailsDto>>> GetAllBrands()
@@ -40,23 +49,12 @@ namespace EcommerceApi.Controllers
             return Ok(await _productService.GetAllBrandsAsync());
 
         }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BrandTypeDetailsDto>>> GetAllTypes()
         {
-            return Ok(await _productService.GetAllTypesAsync());
+          return Ok(await _productService.GetAllTypesAsync());
 
-        }
-        [HttpGet]
-        public async Task<ActionResult<ProductDetailsDto>> GetProductById(int id)
-        {
-            return Ok(await _productService.GetProductByIdAsync(id));
-
-        }
-        [HttpGet]
-        public async Task<ActionResult<ProductDetailsDto>> GetProductByIdWithSpec(int? id)
-        {
-            var spec = new ProductSpecifications();
-            return Ok(await _productService.GetProductWithSpecAsync(spec));
 
         }
     }

@@ -11,13 +11,13 @@ namespace Ecommerce.Repository.Interfaces
     public interface IGenericRepository<TEntity,TKey>where TEntity : BaseEntity<TKey>
     {
         
-        Task <TEntity> GetByIdAsync(TKey id);
-        Task<TEntity> GetEntityWithSpec(ISpecification<TEntity> specification);
+        Task <TEntity> GetByIdAsync(ISpecification<TEntity>? specification);
+        //Task<TEntity> GetEntityWithSpec(ISpecification<TEntity> specification);
 
 
-        Task <IEnumerable<TEntity>> GetAllAsync();
+        Task <IEnumerable<TEntity>> GetAllAsync(ISpecification<TEntity> specification);
 
-        Task<IEnumerable<TEntity>> GetAllWithSpecAsync(ISpecification<TEntity> specification);
+        //Task<IEnumerable<TEntity>> GetAllWithSpecAsync(ISpecification<TEntity> specification);
         IQueryable<TEntity> GetAllQueryable();
 
         Task  AddEntityAsync(TEntity entity);
