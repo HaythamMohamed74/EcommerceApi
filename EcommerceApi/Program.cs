@@ -25,7 +25,15 @@ namespace EcommerceApi
             builder.Services.AddAutoMapper(typeof(ProductProfile));
 
             builder.Services.AddDbContext<StoreDBContext>
-                (optionsAction :(op)=>op.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+                (optionsAction :(op)=>op.
+                UseSqlServer(builder.Configuration.
+                GetConnectionString("DefaultConnection"),
+                                   op =>
+                                   {
+                                       op.CommandTimeout(3600);
+                                       //sqlServerOptions.EnableRetryOnFailure(10, TimeSpan.FromSeconds(60), null);
+                                   }
+                   ));
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();

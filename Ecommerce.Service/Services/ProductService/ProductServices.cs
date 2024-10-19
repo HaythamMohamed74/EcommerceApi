@@ -2,15 +2,10 @@
 using Ecommerce.Repository.Interfaces;
 using Ecommerce.Repository.Specifications;
 using Ecommerce.Repository.Specifications.ProductSpec;
+using Ecommerce.Service.Helper;
 using Ecommerce.Service.Services.ProductService.Dtos;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
 namespace Ecommerce.Service.Services.ProductService
+
 {
     public class ProductServices : IProductService
     {
@@ -40,27 +35,28 @@ namespace Ecommerce.Service.Services.ProductService
 
 
         }
-        public async Task<IEnumerable<ProductDetailsDto>> GetAllProductsAsync(string? sort,int? brandId,int? typeId)
+
+        public async Task<PaginationDto<ProductDetailsDto>> GetAllProductsAsync(ProductSpecificationItems productSpecificationItems)
         {
-            var spec = new ProductSpecifications(sort,brandId, typeId);
+            var spec = new ProductSpecifications(productSpecificationItems);
             var products = await _unitOfWork.Repository<Product, int>().GetAllAsync(spec);
 
-            IEnumerable<ProductDetailsDto> productDetailsMapped = _mapper.Map<IEnumerable<ProductDetailsDto>>(products);
+            IReadOnlyList<ProductDetailsDto> productDetailsMapped = _mapper.Map<IReadOnlyList<ProductDetailsDto>>(products);
+            var specCount=new ProductWithCountSpecefication(productSpecificationItems);
+            var count= await _unitOfWork.Repository<Product, int>().GetCountAsync(specCount);
 
-           
+            var pag = new PaginationDto<ProductDetailsDto>(
+                productDetailsMapped.ToList(),
+                productSpecificationItems.PageIndex,
+                productSpecificationItems.PageSize,
+                count
+                );
+            
 
-            return productDetailsMapped;
+            return pag;
         }
-        //public async Task<IEnumerable<ProductDetailsDto>> GetAllProductsFilterAsync(int? brandId, int? typeId)
-        //{
-        //    var spec = new ProductSpecifications(brandId,typeId);
-        //    var products = await _unitOfWork.Repository<Product, int>().GetAllAsync(spec);
 
-        //    IEnumerable<ProductDetailsDto> productDetailsMapped = _mapper.Map<IEnumerable<ProductDetailsDto>>(products);
-        //    return productDetailsMapped;
-        //}
-
-            public async Task<IEnumerable<BrandTypeDetailsDto>> GetAllBrandsAsync()
+        public async Task<IEnumerable<BrandTypeDetailsDto>> GetAllBrandsAsync()
         {
             var spec = new BaseSpcefication<ProductBrand>();
             var brands = await _unitOfWork.Repository<ProductBrand, int>().GetAllAsync(spec);

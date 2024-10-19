@@ -1,5 +1,6 @@
 ﻿using Ecommerce.Repository.Specifications;
 using Ecommerce.Repository.Specifications.ProductSpec;
+using Ecommerce.Service.Helper;
 using Ecommerce.Service.Services.ProductService.Dtos;
 using System;
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ namespace Ecommerce.Service.Services.ProductService
     {
 
 
-        Task<IEnumerable<ProductDetailsDto>> GetAllProductsAsync(string? sort ,int? brandId , int? typeId); // pageSize ,page index
+        Task<PaginationDto<ProductDetailsDto>> GetAllProductsAsync(ProductSpecificationItems productSpecificationItems); // pageSize ,page index
         //Task<IEnumerable<ProductDetailsDto>> GetAllProductsFilterAsync(int? brandId, int? typeId); // pageSize ,page index
         //Task<ProductDetailsDto> GetAllProductsAsyncOrderingByPrice(); // pageSize ,page index
         //Task<IEnumerable<ProductDetailsDto>> GetAllProductsWithSpecAsync(ProductSpecifications specification);

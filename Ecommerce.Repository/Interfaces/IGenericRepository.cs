@@ -17,6 +17,8 @@ namespace Ecommerce.Repository.Interfaces
 
         Task <IEnumerable<TEntity>> GetAllAsync(ISpecification<TEntity> specification);
 
+        Task<int> GetCountAsync(ISpecification<TEntity> specification);
+
         //Task<IEnumerable<TEntity>> GetAllWithSpecAsync(ISpecification<TEntity> specification);
         IQueryable<TEntity> GetAllQueryable();
 

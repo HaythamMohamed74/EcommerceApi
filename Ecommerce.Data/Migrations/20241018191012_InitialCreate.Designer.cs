@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Ecommerce.Data.Migrations
 {
     [DbContext(typeof(StoreDBContext))]
-    [Migration("20241002223336_ Edit SoftDelete ")]
-    partial class EditSoftDelete
+    [Migration("20241018191012_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

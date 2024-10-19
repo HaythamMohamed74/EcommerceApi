@@ -30,7 +30,7 @@ namespace Ecommerce.Repository.Repositories
         }
 
 
-        public async Task<IEnumerable<TEntity>> GetAllAsync(ISpecification<TEntity>? specification)
+        public async Task<IEnumerable<TEntity>> GetAllAsync(ISpecification<TEntity> specification)
         {
             //var spec =  SpecificationEvaluator<TEntity,TKey>.BuildQuery(_storeDBContext.Set<TEntity>(), specification);
            //return await _storeDBContext.Set<TEntity>().AsNoTracking().ToListAsync();
@@ -66,6 +66,11 @@ namespace Ecommerce.Repository.Repositories
         private IQueryable<TEntity> ApplySpecs(ISpecification<TEntity> spec)
         {
             return SpecificationEvaluator<TEntity, TKey>.BuildQuery(_storeDBContext.Set<TEntity>(), spec);
+        }
+
+        public async Task<int> GetCountAsync(ISpecification<TEntity> specification)
+        {
+          return  await ApplySpecs(specification).CountAsync();
         }
     }
 }

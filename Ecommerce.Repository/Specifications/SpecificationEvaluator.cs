@@ -13,12 +13,15 @@ namespace Ecommerce.Repository.Specifications
         
         public static IQueryable<TEntity> BuildQuery( IQueryable<TEntity> inputQuery ,ISpecification<TEntity>spec)
         {
-            //storeDBContext.Set<TEntity>()//.where(exp).include().ToListAsync();
-
             var query =inputQuery;  //storeDBContext.Set<TEntity>()
             if (spec.Criteria is not null)
             {
               query= query.Where(spec.Criteria);    //.where(exp)
+            }
+
+            if (spec.Includes is not null)
+            {
+                query = spec.Includes.Aggregate(query, (currentQuery, includeExp) => currentQuery.Include(includeExp));
             }
 
             if (spec.OrderBy is not null)
@@ -30,11 +33,14 @@ namespace Ecommerce.Repository.Specifications
             {
                 query = query.OrderByDescending(spec.OrderByDesc);
             }
-            if (spec.Includes is not null)
+            if (spec.IsPagination&&spec.Skip.HasValue&&spec.Take.HasValue)
             {
-                query = spec.Includes.Aggregate(query, (currentQuery, includeExp) => currentQuery.Include(includeExp));
+                    query = query
+              .Skip((spec.Skip.Value - 1) * spec.Take.Value)
+              .Take(spec.Take.Value);
             }
-          
+
+
             return query;
         }
 

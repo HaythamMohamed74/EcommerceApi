@@ -1,5 +1,6 @@
 ﻿using Ecommerce.Repository.Specifications;
 using Ecommerce.Repository.Specifications.ProductSpec;
+using Ecommerce.Service.Helper;
 using Ecommerce.Service.Services.ProductService;
 using Ecommerce.Service.Services.ProductService.Dtos;
 using Microsoft.AspNetCore.Http;
@@ -27,21 +28,16 @@ namespace EcommerceApi.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ProductDetailsDto>>> GetAllProduct([FromQuery] string? sort, int? brandId,  int? typeId)
+        public async Task<ActionResult<PaginationDto<ProductDetailsDto>>>GetAllProduct([FromQuery] ProductSpecificationItems productSpecificationItems)
         {
             
-            return Ok(await _productService.GetAllProductsAsync(sort,brandId,typeId));
+            return Ok(await _productService.GetAllProductsAsync(productSpecificationItems));
+
+            //return Ok(await _productService.GetAllProductsAsync());
 
         }  
-        //[HttpGet]
-        //public async Task<ActionResult<IEnumerable<ProductDetailsDto>>> GetAllProductWithFilter([FromQuery] int? brandId, [FromQuery] int? typeId)
-        //{
-
-        //    return Ok(await _productService.GetAllProductsFilterAsync(brandId, typeId));
-
-
-        //}
-
+        
+  
 
         [HttpGet]
         public async Task<ActionResult<IEnumerable<BrandTypeDetailsDto>>> GetAllBrands()
@@ -54,8 +50,7 @@ namespace EcommerceApi.Controllers
         public async Task<ActionResult<IEnumerable<BrandTypeDetailsDto>>> GetAllTypes()
         {
           return Ok(await _productService.GetAllTypesAsync());
-
-
         }
+
     }
 }

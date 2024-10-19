@@ -26,6 +26,9 @@ namespace Ecommerce.Repository.Specifications
         public List<Expression<Func<TEntity, object>>> Includes { get; set; } = new();
         public Expression<Func<TEntity, object>> OrderBy { get ; set ; }
         public Expression<Func<TEntity, object>> OrderByDesc { get ; set ; }
+        public int? Skip { get; set; }
+        public int? Take { get; set; } 
+        public bool IsPagination { get; set; } 
 
         protected void AddIncludes(Expression<Func<TEntity, object>> includesExp)
         {
@@ -39,8 +42,15 @@ namespace Ecommerce.Repository.Specifications
         {
             OrderByDesc = orderExp;
         }
-           
-      
-      
+        protected void AddPagination(int? _skip,int? _take)
+        {
+            IsPagination=true;
+            Skip= _skip;
+             Take= _take;
+        }
+
+
+
+
     }
 }

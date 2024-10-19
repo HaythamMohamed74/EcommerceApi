@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,15 +20,15 @@ namespace Ecommerce.Repository.Specifications.ProductSpec
         }
 
         //ctor to sort with Filter
-        public ProductSpecifications(string? sort,int?  brandId, int? typeId) : base(p =>
-            (!brandId.HasValue || p.BrandId == brandId) &&
-            (!typeId.HasValue || p.TypeId == typeId))
+        public ProductSpecifications(ProductSpecificationItems productSpecificationItems) : base(p =>
+            (!productSpecificationItems.BrandId.HasValue || p.BrandId == productSpecificationItems.BrandId) &&
+            (!productSpecificationItems.TypeId.HasValue || p.TypeId == productSpecificationItems.TypeId))
         {
             AddIncludes(p => p.Brand);
             AddIncludes(p => p.Type);
-            if (!string.IsNullOrEmpty(sort))
+            if (!string.IsNullOrEmpty(productSpecificationItems.Sort))
             {
-                switch (sort)
+                switch (productSpecificationItems.Sort)
                 {
                     case "priceAsc":
                         AddOrderBy(p => p.Price);
@@ -43,6 +44,9 @@ namespace Ecommerce.Repository.Specifications.ProductSpec
                         break;
                 }
             }
+
+            AddPagination(productSpecificationItems.PageIndex, productSpecificationItems.PageSize);
+
 
 
 
