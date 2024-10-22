@@ -16,17 +16,16 @@ namespace Ecommerce.Data.Data.contexts
         public DbSet<ProductType> ProductTypes { get; set; }
 
 
-        //private readonly DbContextOptions _dbContextOptions;
-
         public StoreDBContext(DbContextOptions<StoreDBContext> options) :base(options)
         {
-            //_dbContextOptions = dbContextOptionsBuilder;
+           
         }
         
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+            
         }
 
     }
