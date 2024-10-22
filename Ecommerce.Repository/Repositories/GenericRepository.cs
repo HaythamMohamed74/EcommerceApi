@@ -3,6 +3,7 @@ using Ecommerce.Data.Entities;
 using Ecommerce.Repository.Interfaces;
 using Ecommerce.Repository.Specifications;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace Ecommerce.Repository.Repositories
 {
@@ -72,5 +73,7 @@ namespace Ecommerce.Repository.Repositories
         {
           return  await ApplySpecs(specification).CountAsync();
         }
+
+       
     }
 }

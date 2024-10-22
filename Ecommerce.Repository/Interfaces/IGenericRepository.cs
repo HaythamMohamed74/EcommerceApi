@@ -29,4 +29,6 @@ namespace Ecommerce.Repository.Interfaces
         void  DeleteEntityAsync(TEntity entity);
         
     }
+
+   
 }

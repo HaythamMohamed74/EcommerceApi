@@ -3,6 +3,7 @@ using Ecommerce.Repository.Specifications.ProductSpec;
 using Ecommerce.Service.Helper;
 using Ecommerce.Service.Services.ProductService;
 using Ecommerce.Service.Services.ProductService.Dtos;
+using EcommerceApi.Errors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -23,7 +24,7 @@ namespace EcommerceApi.Controllers
        
         public async Task<ActionResult<ProductDetailsDto>> GetProductById(int id)
         {
-           
+
             return Ok(await _productService.GetProductByIdAsync(id));
         }
 
