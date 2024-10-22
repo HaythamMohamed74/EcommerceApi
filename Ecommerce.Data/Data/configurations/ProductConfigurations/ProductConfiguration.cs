@@ -17,8 +17,10 @@ namespace Ecommerce.Data.Data.configurations.ProductConfigurations
              .IsRequired()
              .HasMaxLength(100);
             builder.Property(p=>p.Id).UseIdentityColumn(1,1);
-            builder.Property(p => p.CreatedAt).HasDefaultValueSql("GETDAET()");
+            builder.Property(p => p.CreatedAt)
+           .HasDefaultValueSql("GETDATE()");
             builder.HasQueryFilter( p=>! p.isDeleted);
+            builder.HasIndex(p => p.isDeleted).HasFilter("IsDeleted =0");
             builder.HasOne(p => p.Brand)   // Product.Brand
                           .WithMany(b => b.Products)     // A Brand has many Products
                           .HasForeignKey(p => p.BrandId);
