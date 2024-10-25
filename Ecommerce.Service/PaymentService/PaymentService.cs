@@ -1,9 +1,8 @@
 ﻿using AutoMapper;
+using Ecommerce.Repository.Interfaces;
 using Microsoft.Extensions.Configuration;
-using Store.Data.Entites;
 using Store.Data.Entites.OrderEntityies;
 using Store.Reposatrys.Basket.Models;
-using Store.Reposatrys.Interfaces;
 using Store.Reposatrys.Spceficitions.OrderSpecs;
 using Store.Serveses.BasketService;
 using Store.Serveses.OrderService.DTOs;
@@ -35,7 +34,7 @@ namespace Store.Serveses.PaymentService
             if (userBasket is null)
                 throw new Exception("no basket found ");
 
-            var delverymethod = await unit.reposatry<DlivaryMethod>().Getbyid(userBasket.DlivryMethod.Value);
+            var delverymethod = await unit.Repository<DlivaryMethod>().Getbyid(userBasket.DlivryMethod.Value);
 
             if (delverymethod is null)
                 throw new Exception("not provided ");
@@ -44,7 +43,7 @@ namespace Store.Serveses.PaymentService
 
             foreach (var item in userBasket.basketItems)
             {
-                var product = await unit.reposatry<Store.Data.Entites.Product>().Getbyid(item.productId);
+                var product = await unit.Repository<Store.Data.Entites.Product>().Getbyid(item.productId);
                 if (item.Price != product.Price)
                 {
                     item.Price = product.Price;
@@ -84,15 +83,15 @@ namespace Store.Serveses.PaymentService
         public async Task<OrderDetailsDTO> updatePaymentIntentFailed(string paymentIntent)
         {
             var specs = new PaymentSpecs(paymentIntent);
-            var order = await unit.reposatry<Order>().GetbyidWithSpecs(specs);
+            var order = await unit.Repository<Order>().GetbyidWithSpecs(specs);
             if (order is null)
                 throw new Exception("order not exist");
 
             order.paymentStatus = PaymentStatus.failed;
 
-            unit.reposatry<Order>().Update(order);
+            unit.Repository<Order>().Update(order);
 
-            await unit.ComplteAsync();
+            await unit.SaveChanges();
 
             var mapedOrder = mapper.Map<OrderDetailsDTO>(order);
 
@@ -103,15 +102,15 @@ namespace Store.Serveses.PaymentService
         public async Task<OrderDetailsDTO> updatePaymentIntentSucced(string paymentIntent)
         {
             var specs = new PaymentSpecs(paymentIntent);
-            var order = await unit.reposatry<Order>().GetbyidWithSpecs(specs);
+            var order = await unit.Repository<Order>().GetbyidWithSpecs(specs);
             if (order is null)
                 throw new Exception("order not exist");
 
             order.paymentStatus = PaymentStatus.Success;
 
-            unit.reposatry<Order>().Update(order);
+            unit.Repository<Order>().Update(order);
 
-            await unit.ComplteAsync();
+            await unit.SaveChanges();
 
             await basketService.DeleteBasketAsync(Guid.Parse(order.Basketid));
 
