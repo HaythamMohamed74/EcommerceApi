@@ -1,0 +1,121 @@
+﻿using AutoMapper;
+using Ecommerce.Repository.Interfaces;
+using Ecommerce.Service.Services.ProductService;
+using Store.Data.Entites.OrderEntityies;
+using Store.Reposatrys.Spceficitions.OrderSpecs;
+using Store.Serveses.BasketService;
+using Store.Serveses.OrderService.DTOs;
+
+namespace Store.Serveses.OrderService
+{
+    public class OrderService : IOrderService
+    {
+        private readonly IBasketService _basket;
+        private readonly IProductService _product;
+        private readonly IUnitOfWork _unit;
+        private readonly IMapper _mapper;
+        private readonly IPaymentService paymentService;
+
+        public OrderService(IBasketService basket, IProductServes product, IUnitOfWork unit, IMapper mapper, IPaymentService paymentService)
+        {
+
+            _basket = basket;
+            _product = product;
+            _unit = unit;
+            _mapper = mapper;
+            this.paymentService = paymentService;
+        }
+
+        public async Task<OrderDetailsDTO> CreateOrderAsync(OrderDTO orderDTO)
+        {
+            var basket = await _basket.GetBasketAsync(Guid.Parse(orderDTO.BasketId));
+            if (basket is null)
+                throw new Exception("basket not exist");
+            #region 1
+            var orderItems = new List<OrderItem>();
+            foreach (var item in basket.basketItems)
+            {
+                var productitem = await _product.GetProductAsync(item.productId);
+                if (productitem is null)
+                    throw new Exception($"product with id {item.productId} not exsit");
+
+                var orderitem = new OrderItem
+                {
+                    Price = productitem.Price,
+                    Quntity = item.count,
+                    PictureUrl = productitem.PictureUrl,
+                    ProductId = productitem.Id,
+                    ProductName = productitem.Name,
+                };
+                orderItems.Add(orderitem);
+            }
+            #endregion
+
+            #region 2
+            var delveryMethod = await _unit.reposatry<DlivaryMethod>().Getbyid(orderDTO.dlivaryMethodid);
+            if (delveryMethod is null)
+                throw new Exception("Delverymethod not exist");
+
+            #endregion
+
+            #region 3
+            var subtotal = orderItems.Sum(x => x.Price * x.Quntity);
+
+            var specs = new PaymentSpecs(basket.PaymentIntentId);
+            var oldOrder = await _unit.reposatry<Order>().GetbyidWithSpecs(specs);
+            if (oldOrder is null)
+                await paymentService.createOrUpdatePaymentIntent(basket);
+
+            var mapedShippingasdress = _mapper.Map<ShepingAdress>(orderDTO.shepingAdress);
+
+            var order = new Order
+            {
+                shepingAdress = mapedShippingasdress,
+                dlivaryMethodid = orderDTO.dlivaryMethodid,
+                Basketid = orderDTO.BasketId,
+                SubTotal = subtotal,
+                orderItems = orderItems,
+                BuyerEmail = orderDTO.BuyerEmail,
+                PaymentIntentId = basket.PaymentIntentId,
+            };
+
+            await _unit.reposatry<Order>().Add(order);
+            await _unit.ComplteAsync();
+
+            var mapedorder = _mapper.Map<OrderDetailsDTO>(order);
+
+            return mapedorder;
+
+            #endregion
+
+        }
+
+        public async Task<IReadOnlyList<OrderDetailsDTO>> GetAllOrdersAsync(string Email)
+        {
+            var specs = new OrderWithSpecs(Email);
+
+            var orders = await _unit.Repository<Order, Guid>().GetAll(specs);
+
+            if (orders.Count >= 0)
+                throw new Exception("no orders yet");
+
+            var mapedorders = _mapper.Map<IReadOnlyList<OrderDetailsDTO>>(orders);
+
+            return mapedorders;
+        }
+
+        public async Task<OrderDetailsDTO> GetOrderByIdAsync(string Id)
+        {
+            var specs = new OrderWithSpecs(Guid.Parse(Id));
+
+            var order = await _unit.Repository<Order,Guid>().GetbyidWithSpecs(specs);
+
+            if (order is null)
+                throw new Exception("no orders yet");
+
+            var mapedorders = _mapper.Map<OrderDetailsDTO>(order);
+
+            return mapedorders;
+        }
+    }
+}
