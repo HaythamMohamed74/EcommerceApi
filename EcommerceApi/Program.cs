@@ -6,7 +6,9 @@ using Ecommerce.Repository.Repositories;
 using Ecommerce.Service.Services.ProductService;
 using Ecommerce.Service.Services.ProductService.Dtos;
 using EcommerceApi.Helper;
+using EcommerceApi.Middlewars;
 using Microsoft.AspNetCore.Components.Forms;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace EcommerceApi
@@ -37,7 +39,8 @@ namespace EcommerceApi
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
+        
+            
             var app = builder.Build();
             await SeedingData.SeedData(app);
            
@@ -48,14 +51,12 @@ namespace EcommerceApi
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-            app.UseStatusCodePagesWithReExecute("/error/{0}");
+            app.UseStatusCodePagesWithReExecute("/error/{0}");  //not found endpoint
+            app.UseMiddleware<ExceptionMiddleware>();
             app.UseHttpsRedirection();
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseStaticFiles();
-         
-
-
             app.MapControllers();
 
             app.Run();

@@ -1,4 +1,5 @@
-﻿using Ecommerce.Repository.Specifications;
+﻿using Ecommerce.Data.Data.contexts;
+using Ecommerce.Repository.Specifications;
 using Ecommerce.Repository.Specifications.ProductSpec;
 using Ecommerce.Service.Helper;
 using Ecommerce.Service.Services.ProductService;
@@ -21,14 +22,20 @@ namespace EcommerceApi.Controllers
         }
 
         [HttpGet]
-       
+
         public async Task<ActionResult<ProductDetailsDto>> GetProductById(int id)
         {
-
-            return Ok(await _productService.GetProductByIdAsync(id));
+            try
+            {
+                var product = await _productService.GetProductByIdAsync(id);
+                return Ok(product);
+            }
+            catch (DllNotFoundException ex)
+            {
+                return NotFound(new ApiResponse(404, ex.Message));
+            }
         }
-
-        [HttpGet]
+            [HttpGet]
         public async Task<ActionResult<PaginationDto<ProductDetailsDto>>>GetAllProduct([FromQuery] ProductSpecificationItems productSpecificationItems)
         {
             
@@ -36,8 +43,9 @@ namespace EcommerceApi.Controllers
 
             //return Ok(await _productService.GetAllProductsAsync());
 
-        }  
-        
+        }
+
+       
   
 
         [HttpGet]

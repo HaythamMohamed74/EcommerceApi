@@ -25,14 +25,14 @@ namespace Ecommerce.Service.Services.ProductService
 
             if (product is null)
             {
-                throw new Exception("product not found ");
+
+                throw new DllNotFoundException($"Not Found Product with {id}");
             }
 
             var productDetailsMapped = _mapper.Map<ProductDetailsDto>(product);
 
 
             return productDetailsMapped;
-
 
         }
 
