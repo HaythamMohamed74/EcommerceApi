@@ -25,15 +25,15 @@ namespace EcommerceApi.Controllers
 
         public async Task<ActionResult<ProductDetailsDto>> GetProductById(int id)
         {
-            try
+            var product = await _productService.GetProductByIdAsync(id);
+
+            if (product is null)
             {
-                var product = await _productService.GetProductByIdAsync(id);
-                return Ok(product);
+                // Return a structured 404 Not Found response
+                return NotFound(new ApiResponse(404, $"Product with {id} not found"));
             }
-            catch (DllNotFoundException ex)
-            {
-                return NotFound(new ApiResponse(404, ex.Message));
-            }
+
+            return Ok(product);
         }
             [HttpGet]
         public async Task<ActionResult<PaginationDto<ProductDetailsDto>>>GetAllProduct([FromQuery] ProductSpecificationItems productSpecificationItems)

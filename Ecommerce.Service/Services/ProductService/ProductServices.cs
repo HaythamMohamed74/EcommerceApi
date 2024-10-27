@@ -23,11 +23,13 @@ namespace Ecommerce.Service.Services.ProductService
 
             var product = await _unitOfWork.Repository<Product, int>().GetByIdAsync(spec);
 
-            if (product is null)
-            {
 
-                throw new DllNotFoundException($"Not Found Product with {id}");
-            }
+
+            //if (product is null)
+            //{
+
+            //    throw new DllNotFoundException($"Not Found Product with {id}");
+            //}
 
             var productDetailsMapped = _mapper.Map<ProductDetailsDto>(product);
 
