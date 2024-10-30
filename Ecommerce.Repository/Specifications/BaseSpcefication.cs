@@ -28,7 +28,8 @@ namespace Ecommerce.Repository.Specifications
         public Expression<Func<TEntity, object>> OrderByDesc { get ; set ; }
         public int? Skip { get; set; }
         public int? Take { get; set; } 
-        public bool IsPagination { get; set; } 
+        public bool IsPagination { get; set; }
+        //public string? SearchName { get; set; }
 
         protected void AddIncludes(Expression<Func<TEntity, object>> includesExp)
         {
@@ -48,6 +49,10 @@ namespace Ecommerce.Repository.Specifications
             Skip= _skip;
              Take= _take;
         }
+        //protected void AddSearching(string? searchText)
+        //{
+        //    SearchName = searchText;
+        //}
 
 
 

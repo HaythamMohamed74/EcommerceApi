@@ -41,6 +41,8 @@ namespace Ecommerce.Service.Services.ProductService
         public async Task<PaginationDto<ProductDetailsDto>> GetAllProductsAsync(ProductSpecificationItems productSpecificationItems)
         {
             var spec = new ProductSpecifications(productSpecificationItems);
+
+
             var products = await _unitOfWork.Repository<Product, int>().GetAllAsync(spec);
 
             IReadOnlyList<ProductDetailsDto> productDetailsMapped = _mapper.Map<IReadOnlyList<ProductDetailsDto>>(products);
