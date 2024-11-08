@@ -13,17 +13,18 @@ namespace Ecommerce.Repository.Specifications
         
         public static IQueryable<TEntity> BuildQuery( IQueryable<TEntity> inputQuery ,ISpecification<TEntity>spec)
         {
+            //products.Where(p => p.Name.Contains(""));
             var query =inputQuery;  //storeDBContext.Set<TEntity>()
             if (spec.Criteria is not null)
             {
               query= query.Where(spec.Criteria);    //.where(exp)
             }
+           
 
             if (spec.Includes is not null)
             {
                 query = spec.Includes.Aggregate(query, (currentQuery, includeExp) => currentQuery.Include(includeExp));
             }
-
             if (spec.OrderBy is not null)
             {
 

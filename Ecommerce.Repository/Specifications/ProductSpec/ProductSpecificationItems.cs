@@ -23,6 +23,15 @@ namespace Ecommerce.Repository.Specifications.ProductSpec
 
         public int PageIndex { get; set; } = 1;
 
+        private string searchName;
+
+        public string SearchName
+        {
+            get { return searchName; }
+            set { searchName = value.ToLower(); }
+        }
+
+
 
 
     }

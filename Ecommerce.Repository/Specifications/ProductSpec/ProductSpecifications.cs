@@ -21,11 +21,15 @@ namespace Ecommerce.Repository.Specifications.ProductSpec
 
         //ctor to sort with Filter
         public ProductSpecifications(ProductSpecificationItems productSpecificationItems) : base(p =>
+        //left is false make condition on right
+          (string.IsNullOrEmpty(productSpecificationItems.SearchName) || p.Name.ToLower().Contains(productSpecificationItems.SearchName.ToLower()))&&
             (!productSpecificationItems.BrandId.HasValue || p.BrandId == productSpecificationItems.BrandId) &&
             (!productSpecificationItems.TypeId.HasValue || p.TypeId == productSpecificationItems.TypeId))
         {
             AddIncludes(p => p.Brand);
             AddIncludes(p => p.Type);
+            //AddSearching(productSpecificationItems.SearchName);
+            //AddSearching(p=>p.Name.Contains(productSpecificationItems.SearchName));
             if (!string.IsNullOrEmpty(productSpecificationItems.Sort))
             {
                 switch (productSpecificationItems.Sort)
