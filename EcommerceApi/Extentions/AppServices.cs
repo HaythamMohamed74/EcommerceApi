@@ -1,6 +1,7 @@
 ﻿using Ecommerce.Data.Data.contexts;
 using Ecommerce.Repository.Interfaces;
 using Ecommerce.Repository.Repositories;
+using Ecommerce.Service.Services.BasketService;
 using Ecommerce.Service.Services.ProductService;
 using Ecommerce.Service.Services.ProductService.Dtos;
 using EcommerceApi.Errors;
@@ -15,6 +16,8 @@ namespace EcommerceApi.Extentions
         public static IServiceCollection ConfigurationService(this IServiceCollection Services)
         {
             Services.AddScoped<IUnitOfWork, UnitOfWork>();
+            Services.AddScoped<IBasketRepository, BasketRepository>();  // BasketRepo Injection 
+            Services.AddScoped<IBasketService, BasketService>();  // BasketService Injection 
             Services.AddScoped<IProductService, ProductServices>();
             Services.AddAutoMapper(typeof(ProductProfile));
 

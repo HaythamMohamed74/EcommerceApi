@@ -21,7 +21,6 @@ namespace Ecommerce.Repository.Specifications
             }
            
 
-
             if (spec.Includes is not null)
             {
                 query = spec.Includes.Aggregate(query, (currentQuery, includeExp) => currentQuery.Include(includeExp));

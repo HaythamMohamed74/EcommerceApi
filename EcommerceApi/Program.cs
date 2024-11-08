@@ -12,6 +12,7 @@ using EcommerceApi.Middlewars;
 using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using StackExchange.Redis;
 
 namespace EcommerceApi
 {
@@ -38,22 +39,18 @@ namespace EcommerceApi
                                        //sqlServerOptions.EnableRetryOnFailure(10, TimeSpan.FromSeconds(60), null);
                                    }
                    ));
+            builder.Services.AddSingleton<IConnectionMultiplexer>(option =>
+            {
+
+                var connection = builder.Configuration.GetConnectionString("RedisConnection");
+                return ConnectionMultiplexer.Connect(connection);
+            });
+
             builder.Services.ConfigurationService();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-            //#region Api Behavior
-            //builder.Services.Configure<ApiBehaviorOptions>
-            //       (op => op.InvalidModelStateResponseFactory = context =>
-            //       {
-            //           var errors =
-            //           context.ModelState.Values.SelectMany(e => e.Errors).Select(e => e.ErrorMessage);
-            //           var response = new ApiValidationError(errors);
-            //           return new BadRequestObjectResult(response);
-
-            //       }
-            //   );  
-            //#endregion
+     
 
 
             var app = builder.Build();

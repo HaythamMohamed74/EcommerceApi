@@ -64,7 +64,6 @@ namespace Ecommerce.Service.Services.ProductService
         {
             var spec = new BaseSpcefication<ProductBrand>();
             var brands = await _unitOfWork.Repository<ProductBrand, int>().GetAllAsync(spec);
-
             IEnumerable<BrandTypeDetailsDto> brandsMapped = _mapper.Map<IEnumerable<BrandTypeDetailsDto>>(brands);
 
             return brandsMapped;
@@ -73,7 +72,8 @@ namespace Ecommerce.Service.Services.ProductService
 
         public async Task<IEnumerable<BrandTypeDetailsDto>> GetAllTypesAsync()
         {
-            var types = await _unitOfWork.Repository<ProductType, int>().GetAllAsync(null);
+            var spec = new BaseSpcefication<ProductType>();
+            var types = await _unitOfWork.Repository<ProductType, int>().GetAllAsync(spec);
 
             IEnumerable<BrandTypeDetailsDto> typesMapped = _mapper.Map<IEnumerable<BrandTypeDetailsDto>>(types);
 

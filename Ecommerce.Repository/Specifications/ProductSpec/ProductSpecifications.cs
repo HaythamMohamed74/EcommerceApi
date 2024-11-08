@@ -22,7 +22,7 @@ namespace Ecommerce.Repository.Specifications.ProductSpec
         //ctor to sort with Filter
         public ProductSpecifications(ProductSpecificationItems productSpecificationItems) : base(p =>
         //left is false make condition on right
-          (string.IsNullOrEmpty(productSpecificationItems.SearchName) ||p.Name.ToLower().Contains(productSpecificationItems.SearchName))&&
+          (string.IsNullOrEmpty(productSpecificationItems.SearchName) || p.Name.ToLower().Contains(productSpecificationItems.SearchName.ToLower()))&&
             (!productSpecificationItems.BrandId.HasValue || p.BrandId == productSpecificationItems.BrandId) &&
             (!productSpecificationItems.TypeId.HasValue || p.TypeId == productSpecificationItems.TypeId))
         {
